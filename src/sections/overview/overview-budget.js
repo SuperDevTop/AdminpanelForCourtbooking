@@ -21,7 +21,7 @@ export const OverviewBudget = (props) => {
               color="text.secondary"
               variant="overline"
             >
-              Budget
+              Total Courts
             </Typography>
             <Typography variant="h4">
               {value}
@@ -34,9 +34,9 @@ export const OverviewBudget = (props) => {
               width: 56
             }}
           >
-            <SvgIcon>
+            {/* <SvgIcon>
               <CurrencyDollarIcon />
-            </SvgIcon>
+            </SvgIcon> */}
           </Avatar>
         </Stack>
         {difference && (

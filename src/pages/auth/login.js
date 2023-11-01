@@ -25,8 +25,8 @@ const Page = () => {
   const [method, setMethod] = useState('email');
   const formik = useFormik({
     initialValues: {
-      email: 'demo@devias.io',
-      password: 'Password123!',
+      email: 'test@gmail.com',
+      password: 'test',
       submit: null
     },
     validationSchema: Yup.object({
@@ -43,8 +43,9 @@ const Page = () => {
     onSubmit: async (values, helpers) => {
       try {
         await auth.signIn(values.email, values.password);
-        router.push('/');
+        window.sessionStorage.getItem("token") && router.push('/users');
       } catch (err) {
+        console.log(err);
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
         helpers.setSubmitting(false);
@@ -71,7 +72,7 @@ const Page = () => {
     <>
       <Head>
         <title>
-          Login | Devias Kit
+          Login | Admin
         </title>
       </Head>
       <Box
@@ -103,7 +104,7 @@ const Page = () => {
                 color="text.secondary"
                 variant="body2"
               >
-                Don&apos;t have an account?
+                {/* Don&apos;t have an account?
                 &nbsp;
                 <Link
                   component={NextLink}
@@ -112,7 +113,7 @@ const Page = () => {
                   variant="subtitle2"
                 >
                   Register
-                </Link>
+                </Link> */}
               </Typography>
             </Stack>
             <Tabs
@@ -124,10 +125,10 @@ const Page = () => {
                 label="Email"
                 value="email"
               />
-              <Tab
+              {/* <Tab
                 label="Phone Number"
                 value="phoneNumber"
-              />
+              /> */}
             </Tabs>
             {method === 'email' && (
               <form
@@ -158,9 +159,6 @@ const Page = () => {
                     value={formik.values.password}
                   />
                 </Stack>
-                <FormHelperText sx={{ mt: 1 }}>
-                  Optionally you can skip.
-                </FormHelperText>
                 {formik.errors.submit && (
                   <Typography
                     color="error"
@@ -177,17 +175,17 @@ const Page = () => {
                   type="submit"
                   variant="contained"
                 >
-                  Continue
+                  Log in
                 </Button>
-                <Button
+                {/* <Button
                   fullWidth
                   size="large"
                   sx={{ mt: 3 }}
                   onClick={handleSkip}
                 >
                   Skip authentication
-                </Button>
-                <Alert
+                </Button> */}
+                {/* <Alert
                   color="primary"
                   severity="info"
                   sx={{ mt: 3 }}
@@ -195,21 +193,8 @@ const Page = () => {
                   <div>
                     You can use <b>demo@devias.io</b> and password <b>Password123!</b>
                   </div>
-                </Alert>
+                </Alert> */}
               </form>
-            )}
-            {method === 'phoneNumber' && (
-              <div>
-                <Typography
-                  sx={{ mb: 1 }}
-                  variant="h6"
-                >
-                  Not available in the demo
-                </Typography>
-                <Typography color="text.secondary">
-                  To prevent unnecessary costs we disabled this feature in the demo.
-                </Typography>
-              </div>
             )}
           </div>
         </Box>

@@ -71,13 +71,13 @@ export const SideNav = (props) => {
                 color="inherit"
                 variant="subtitle1"
               >
-                Devias
+                Court Booking
               </Typography>
               <Typography
                 color="neutral.400"
                 variant="body2"
               >
-                Production
+                Admin Panel
               </Typography>
             </div>
             <SvgIcon
@@ -130,7 +130,7 @@ export const SideNav = (props) => {
             py: 3
           }}
         >
-          <Typography
+          {/* <Typography
             color="neutral.100"
             variant="subtitle2"
           >
@@ -141,8 +141,8 @@ export const SideNav = (props) => {
             variant="body2"
           >
             Check out our Pro solution template.
-          </Typography>
-          <Box
+          </Typography> */}
+          {/* <Box
             sx={{
               display: 'flex',
               mt: 2,
@@ -172,7 +172,7 @@ export const SideNav = (props) => {
             variant="contained"
           >
             Pro Live Preview
-          </Button>
+          </Button> */}
         </Box>
       </Box>
     </Scrollbar>

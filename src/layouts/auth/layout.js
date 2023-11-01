@@ -68,7 +68,7 @@ export const Layout = (props) => {
             }
           }}
         >
-          <Box sx={{ p: 3 }}>
+          <Box sx={{ p: 3, textAlign: 'center'}}>
             <Typography
               align="center"
               color="inherit"
@@ -85,7 +85,7 @@ export const Layout = (props) => {
                 sx={{ color: '#15B79E' }}
                 target="_blank"
               >
-                Devias Kit
+                Court Bookng
               </Box>
             </Typography>
             <Typography
@@ -93,11 +93,14 @@ export const Layout = (props) => {
               sx={{ mb: 3 }}
               variant="subtitle1"
             >
-              A professional kit that comes with ready-to-use MUI components.
+              Admin panel for court booking website!
             </Typography>
             <img
               alt=""
-              src="/assets/auth-illustration.svg"
+              src="/assets/login.png"
+              style={{ 
+                maxWidth: '60%'
+               }}
             />
           </Box>
         </Grid>

@@ -85,7 +85,7 @@ export const CompanyCard = (props) => {
             display="inline"
             variant="body2"
           >
-            {company.downloads} Downloads
+            {company.books} books
           </Typography>
         </Stack>
       </Stack>

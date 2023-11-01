@@ -19,7 +19,7 @@ export const OverviewTotalProfit = (props) => {
               color="text.secondary"
               variant="overline"
             >
-              Total Profit
+              Total Booking
             </Typography>
             <Typography variant="h4">
               {value}
@@ -32,9 +32,9 @@ export const OverviewTotalProfit = (props) => {
               width: 56
             }}
           >
-            <SvgIcon>
+            {/* <SvgIcon>
               <CurrencyDollarIcon />
-            </SvgIcon>
+            </SvgIcon> */}
           </Avatar>
         </Stack>
       </CardContent>
