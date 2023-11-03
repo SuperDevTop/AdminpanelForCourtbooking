@@ -6,64 +6,42 @@ import {
   CardActions,
   CardContent,
   Divider,
-  Typography
-} from '@mui/material';
+  Typography,
+} from "@mui/material";
+import { useAuthContext } from "src/contexts/auth-context";
 
-const user = {
-  avatar: '/assets/avatars/avatar-anika-visser.png',
-  city: 'Ontario',
-  country: 'Canada',
-  jobTitle: 'Senior Developer',
-  name: 'Nikolay Sapov',
-  timezone: 'GMT-4'
-};
+export const AccountProfile = () => {
+  const { user } = useAuthContext();
 
-export const AccountProfile = () => (
-  <Card>
-    <CardContent>
-      <Box
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'column'
-        }}
-      >
-        <Avatar
-          src={user.avatar}
+  return (
+    <Card>
+      <CardContent>
+        <Box
           sx={{
-            height: 80,
-            mb: 2,
-            width: 80
+            alignItems: "center",
+            display: "flex",
+            flexDirection: "column",
           }}
-        />
-        <Typography
-          gutterBottom
-          variant="h5"
         >
-          {user.name}
-        </Typography>
-        <Typography
-          color="text.secondary"
-          variant="body2"
-        >
-          {user.city} {user.country}
-        </Typography>
-        <Typography
-          color="text.secondary"
-          variant="body2"
-        >
-          {user.timezone}
-        </Typography>
-      </Box>
-    </CardContent>
-    <Divider />
-    <CardActions>
-      <Button
-        fullWidth
-        variant="text"
-      >
-        Upload picture
-      </Button>
-    </CardActions>
-  </Card>
-);
+          <Avatar
+            src={user ? user.avatar : "/assets/avatars/avatar-anika-visser.png"}
+            sx={{
+              height: 80,
+              mb: 2,
+              width: 80,
+            }}
+          />
+          <Typography gutterBottom variant="h5">
+            {user ? user.email : ""}
+          </Typography>
+        </Box>
+      </CardContent>
+      <Divider />
+      <CardActions>
+        <Button fullWidth variant="text">
+          Upload picture
+        </Button>
+      </CardActions>
+    </Card>
+  );
+};

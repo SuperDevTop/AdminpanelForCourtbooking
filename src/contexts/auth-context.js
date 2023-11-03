@@ -7,17 +7,19 @@ const HANDLERS = {
   INITIALIZE: "INITIALIZE",
   SIGN_IN: "SIGN_IN",
   SIGN_OUT: "SIGN_OUT",
+  UPDATE_USER: "UPDATE_USER",
 };
 
 const initialState = {
   isAuthenticated: false,
   isLoading: true,
   user: null,
+  users: [],
 };
 
 const handlers = {
   [HANDLERS.INITIALIZE]: (state, action) => {
-    const user = action.payload;
+    const { user, users } = action.payload;
 
     return {
       ...state,
@@ -27,6 +29,7 @@ const handlers = {
             isAuthenticated: true,
             isLoading: false,
             user,
+            users,
           }
         : {
             isLoading: false,
@@ -34,12 +37,13 @@ const handlers = {
     };
   },
   [HANDLERS.SIGN_IN]: (state, action) => {
-    const user = action.payload;
+    const { user, users } = action.payload;
 
     return {
       ...state,
       isAuthenticated: true,
       user,
+      users,
     };
   },
   [HANDLERS.SIGN_OUT]: (state) => {
@@ -47,6 +51,16 @@ const handlers = {
       ...state,
       isAuthenticated: false,
       user: null,
+      users: [],
+    };
+  },
+  [HANDLERS.UPDATE_USER]: (state, action) => {
+    const { user } = action.payload;
+
+    return {
+      ...state,
+      isAuthenticated: true,
+      user: user,
     };
   },
 };
@@ -86,10 +100,11 @@ export const AuthProvider = (props) => {
         name: "Nikolay Sapov",
         email: "anika.visser@devias.io",
       };
+      const users = [];
 
       dispatch({
         type: HANDLERS.INITIALIZE,
-        payload: user,
+        payload: { user, users },
       });
     } else {
       dispatch({
@@ -120,9 +135,10 @@ export const AuthProvider = (props) => {
       email: "anika.visser@devias.io",
     };
 
+    const users = [];
     dispatch({
       type: HANDLERS.SIGN_IN,
-      payload: user,
+      payload: { user, users },
     });
   };
 
@@ -143,16 +159,11 @@ export const AuthProvider = (props) => {
           window.sessionStorage.setItem("authenticated", "true");
           window.sessionStorage.setItem("token", token);
 
-          const user = {
-            id: "5e86809283e28b96d2d38537",
-            avatar: "/assets/avatars/avatar-anika-visser.png",
-            name: "Admin",
-            email: "anika.visser@devias.io",
-          };
+          const { user, users } = res.data;
 
           dispatch({
             type: HANDLERS.SIGN_IN,
-            payload: user,
+            payload: { user, users },
           });
         } catch (err) {
           console.error(err);
@@ -178,6 +189,49 @@ export const AuthProvider = (props) => {
     });
   };
 
+  const updatePassword = (newPassword, email) => {
+    const data = {
+      newPassword: newPassword,
+      email: email,
+    };
+
+    axios
+      .post(backendUrl + "/api/auth/updatePassword", data)
+      .then((res) => {
+        console.log(res.data.message);
+        dispatch({
+          type: HANDLERS.SIGN_OUT,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response === undefined) {
+          throw new Error(err.message);
+        } else {
+          throw new Error(err.response.data.message);
+        }
+      });
+  };
+
+  const updateUser = (data) => {
+    axios
+      .post(backendUrl + "/api/auth/updateUser", data)
+      .then((res) => {
+        const { user } = res.data;
+        dispatch({
+          type: HANDLERS.UPDATE_USER,
+          payload: { user },
+        });
+      })
+      .catch((err) => {
+        if (err.response === undefined) {
+          throw new Error(error.message);
+        } else {
+          throw new Error(err.response.data.message);
+        }
+      });
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -186,6 +240,8 @@ export const AuthProvider = (props) => {
         signIn,
         signUp,
         signOut,
+        updatePassword,
+        updateUser,
       }}
     >
       {children}

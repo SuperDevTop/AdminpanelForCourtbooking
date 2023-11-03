@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import { format } from "date-fns";
 import {
   Avatar,
   Box,
@@ -57,22 +56,16 @@ export const CustomersTable = (props) => {
                 </TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>Email</TableCell>
-                <TableCell>
-                  Role
-                </TableCell>
-                {/* <TableCell>
-                  Phone
-                </TableCell> */}
-                <TableCell>Signed Up</TableCell>
+                <TableCell>Role</TableCell>
+                <TableCell>Phone</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {items.map((customer) => {
                 const isSelected = selected.includes(customer.id);
-                const createdAt = format(customer.createdAt, "dd/MM/yyyy");
 
                 return (
-                  <TableRow hover key={customer.id} selected={isSelected}>
+                  <TableRow hover key={customer._id} selected={isSelected}>
                     <TableCell padding="checkbox">
                       <Checkbox
                         checked={isSelected}
@@ -92,13 +85,8 @@ export const CustomersTable = (props) => {
                       </Stack>
                     </TableCell>
                     <TableCell>{customer.email}</TableCell>
-                    <TableCell>
-                      {customer.role}
-                    </TableCell>
-                    {/* <TableCell>
-                      {customer.phone}
-                    </TableCell> */}
-                    <TableCell>{createdAt}</TableCell>
+                    <TableCell>{customer.role}</TableCell>
+                    <TableCell>{customer.phone && customer.phone}</TableCell>
                   </TableRow>
                 );
               })}
