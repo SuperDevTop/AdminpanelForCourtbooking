@@ -19,7 +19,8 @@ const initialState = {
 
 const handlers = {
   [HANDLERS.INITIALIZE]: (state, action) => {
-    const { user, users } = action.payload;
+  
+    const user = action.payload;
 
     return {
       ...state,
@@ -29,7 +30,6 @@ const handlers = {
             isAuthenticated: true,
             isLoading: false,
             user,
-            users,
           }
         : {
             isLoading: false,
@@ -104,7 +104,7 @@ export const AuthProvider = (props) => {
 
       dispatch({
         type: HANDLERS.INITIALIZE,
-        payload: { user, users },
+        payload: user,
       });
     } else {
       dispatch({
