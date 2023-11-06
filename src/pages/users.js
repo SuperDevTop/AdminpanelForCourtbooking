@@ -11,7 +11,7 @@ import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { CustomersTable } from "src/sections/customer/customers-table";
 import { CustomersSearch } from "src/sections/customer/customers-search";
 import { applyPagination } from "src/utils/apply-pagination";
-import { useAuthContext } from "src/contexts/auth-context";
+import { useAdminContext } from "src/contexts/admin-context";
 import CustomAdd from "src/sections/customer/customer-add";
 
 const now = new Date();
@@ -177,13 +177,13 @@ const now = new Date();
 // };
 
 const Page = () => {
-  const { users } = useAuthContext();
+  const { users } = useAdminContext();
   const [customDialogOpen, setCutomDialogOpen] = useState(false);
 
   const useCustomers = (page, rowsPerPage) => {
     return useMemo(() => {
       return applyPagination(users, page, rowsPerPage);
-    }, [page, rowsPerPage]);
+    }, [page, rowsPerPage, users]);
   };
 
   const useCustomerIds = (customers) => {
@@ -193,7 +193,7 @@ const Page = () => {
   };
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const customers = useCustomers(page, rowsPerPage);
   const customersIds = useCustomerIds(customers);
   const customersSelection = useSelection(customersIds);

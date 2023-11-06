@@ -14,7 +14,6 @@ const initialState = {
   isAuthenticated: false,
   isLoading: true,
   user: null,
-  users: [],
 };
 
 const handlers = {
@@ -37,13 +36,12 @@ const handlers = {
     };
   },
   [HANDLERS.SIGN_IN]: (state, action) => {
-    const { user, users } = action.payload;
+    const { user } = action.payload;
 
     return {
       ...state,
       isAuthenticated: true,
       user,
-      users,
     };
   },
   [HANDLERS.SIGN_OUT]: (state) => {
@@ -51,7 +49,6 @@ const handlers = {
       ...state,
       isAuthenticated: false,
       user: null,
-      users: [],
     };
   },
   [HANDLERS.UPDATE_USER]: (state, action) => {
@@ -100,7 +97,6 @@ export const AuthProvider = (props) => {
         name: "Nikolay Sapov",
         email: "anika.visser@devias.io",
       };
-      const users = [];
 
       dispatch({
         type: HANDLERS.INITIALIZE,
@@ -135,10 +131,9 @@ export const AuthProvider = (props) => {
       email: "anika.visser@devias.io",
     };
 
-    const users = [];
     dispatch({
       type: HANDLERS.SIGN_IN,
-      payload: { user, users },
+      payload: { user, user },
     });
   };
 
@@ -159,11 +154,11 @@ export const AuthProvider = (props) => {
           window.sessionStorage.setItem("authenticated", "true");
           window.sessionStorage.setItem("token", token);
 
-          const { user, users } = res.data;
+          const { user } = res.data;
 
           dispatch({
             type: HANDLERS.SIGN_IN,
-            payload: { user, users },
+            payload: { user },
           });
         } catch (err) {
           console.error(err);
@@ -177,10 +172,6 @@ export const AuthProvider = (props) => {
           throw new Error(err.response.data.message);
         }
       });
-  };
-
-  const signUp = async (email, name, password) => {
-    throw new Error("Sign up is not implemented");
   };
 
   const signOut = () => {
@@ -238,7 +229,6 @@ export const AuthProvider = (props) => {
         ...state,
         skip,
         signIn,
-        signUp,
         signOut,
         updatePassword,
         updateUser,

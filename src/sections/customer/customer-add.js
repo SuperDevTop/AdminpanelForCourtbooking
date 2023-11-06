@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Grid,
-  TextField,
-} from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, Button, Grid, TextField } from "@mui/material";
+import { Stack } from "@mui/material";
+import { Autocomplete } from "@mui/material";
+
+import { useAdmin } from "src/hooks/use-admin";
 
 export default function CustomAdd({ open, setClose }) {
+  const admin = useAdmin();
+
+  const flatOptionProps = {
+    options: ["user", "admin"],
+  };
+
   const [values, setValues] = useState({
     name: "",
     email: "",
@@ -18,84 +20,134 @@ export default function CustomAdd({ open, setClose }) {
     phone: "",
   });
 
-  const onSave = () => {
+  const [role, setRole] = useState('user')
+
+  const onSave = async (event) => {
+    event.preventDefault();
+    if (values.password !== values.confirm) {
+      alert("Password doesn't match!");
+      return;
+    }
+
+    const data = {
+      name: values.name,
+      email: values.email,
+      password: values.password,
+      phone: values.phone,
+      role: role,
+    };
+
+    await admin.addUser(data);
+
     setClose();
   };
 
   const handleChange = (event) => {
     setValues((previState) => ({
-      ...previsate,
+      ...previState,
       [event.target.name]: event.target.value,
     }));
   };
 
+  const handleRole = (event, value) => {
+    setRole(value);
+  };
+
   return (
-    <Dialog open={open}>
-      <DialogTitle>Add User</DialogTitle>
+    <Dialog open={open} sx={{ marginTop: 2 }}>
+      <DialogTitle sx={{ textAlign: "center" }}>Add User</DialogTitle>
       <DialogContent>
-        <Grid container>
-          <Grid sx={12} md={6} spacing={5}>
-            <TextField
-              fullWidth
-              helperText="Please specify the name"
-              label="Name"
-              name="name"
-              onChange={handleChange}
-              required
-              value={values.name}
-            />
+        <form onSubmit={onSave} autoComplete="off">
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                helperText="Please specify the name"
+                label="Name"
+                name="name"
+                onChange={handleChange}
+                required
+                value={values.name}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                helperText="Please specify the email address"
+                label="Email"
+                name="email"
+                type="email"
+                onChange={handleChange}
+                required
+                value={values.email}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                helperText="Please specify the phone"
+                label="Phone"
+                name="phone"
+                type="number"
+                onChange={handleChange}
+                required
+                value={values.phone}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                helperText="Please specify the password"
+                label="Password"
+                name="password"
+                onChange={handleChange}
+                required
+                type="password"
+                value={values.password}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                helperText="Please confirm the password"
+                label="Confirm the password"
+                name="confirm"
+                type="password"
+                onChange={handleChange}
+                required
+                value={values.confirm}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Stack spacing={1}>
+                <Autocomplete
+                  {...flatOptionProps}
+                  id="role"
+                  value={role}
+                  // isOptionEqualToValue={(option, value) => {option === value}}
+                  onChange={handleRole}
+                  name="role"
+                  renderInput={(params) => (
+                    <TextField {...params} label="Role" variant="standard" />
+                  )}
+                />
+              </Stack>
+            </Grid>
+            <Grid container display="flex" justifyContent="flex-end" spacing={1}>
+              <Grid item>
+                <Button type="submit" variant="contained">
+                  Save
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button variant="contained" onClick={() => setClose()}>
+                  Cancel
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid sx={12} md={6}>
-            <TextField
-              fullWidth
-              helperText="Please specify the email address"
-              label="Email"
-              name="email"
-              onChange={handleChange}
-              required
-              value={values.email}
-            />
-          </Grid>
-          <Grid sx={12} md={6}>
-            <TextField
-              fullWidth
-              helperText="Please specify the phone"
-              label="Phone"
-              name="phone"
-              onChange={handleChange}
-              required
-              value={values.phone}
-            />
-          </Grid>
-          <Grid sx={12} md={6}>
-            <TextField
-              fullWidth
-              helperText="Please specify the password"
-              label="Password"
-              name="password"
-              onChange={handleChange}
-              required
-              value={values.password}
-            />
-          </Grid>
-          <Grid sx={12} md={6}>
-            <TextField
-              fullWidth
-              helperText="Please confirm the password"
-              label="Confirm the password"
-              name="confirm"
-              onChange={handleChange}
-              required
-              value={values.confirm}
-            />
-          </Grid>
-        </Grid>
+        </form>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onSave} variant="contained">
-          Save
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 }
