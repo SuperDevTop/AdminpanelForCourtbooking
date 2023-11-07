@@ -151,7 +151,7 @@ export const AdminProvider = (props) => {
   );
 
   const addUser = async (data) => {
-    axios
+    return axios
       .post(backendUrl + "/api/admin/addUser", data)
       .then((res) => {
         const { users } = res.data;

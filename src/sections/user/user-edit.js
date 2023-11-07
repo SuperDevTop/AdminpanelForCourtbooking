@@ -16,6 +16,7 @@ export default function UserEdit({ open, setClose, user }) {
 
   useEffect(() => {
     setValues(user);
+    user.role && setRole(user.role)
   }, [user]);
 
   const [role, setRole] = useState("user");
@@ -76,6 +77,9 @@ export default function UserEdit({ open, setClose, user }) {
                 onChange={handleChange}
                 required
                 value={values.email}
+                InputProps={{ 
+                  readOnly: true
+                 }}
               />
             </Grid>
             <Grid item xs={12} md={6}>

@@ -4,9 +4,11 @@ import { Stack } from "@mui/material";
 import { Autocomplete } from "@mui/material";
 
 import { useAdmin } from "src/hooks/use-admin";
+import LoadingOverlay from "src/components/loadingOverlay";
 
 export default function UserAdd({ open, setClose }) {
   const admin = useAdmin();
+  const [isSaving, setIsSaving] = useState(false);
 
   const flatOptionProps = {
     options: ["user", "admin", "booker"],
@@ -37,7 +39,9 @@ export default function UserAdd({ open, setClose }) {
       role: role,
     };
 
+    setIsSaving(true);
     await admin.addUser(data);
+    setIsSaving(false);
 
     setClose();
   };
@@ -148,6 +152,7 @@ export default function UserAdd({ open, setClose }) {
           </Grid>
         </form>
       </DialogContent>
+      {isSaving && <LoadingOverlay text='Saving...' color='success'/>}
     </Dialog>
   );
 }
