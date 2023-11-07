@@ -8,11 +8,11 @@ import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/materia
 
 import { useSelection } from "src/hooks/use-selection";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { CustomersTable } from "src/sections/customer/customers-table";
-import { CustomersSearch } from "src/sections/customer/customers-search";
+import { UsersTable } from "src/sections/user/users-table";
+import { UsersSearch } from "src/sections/user/users-search";
 import { applyPagination } from "src/utils/apply-pagination";
 import { useAdminContext } from "src/contexts/admin-context";
-import CustomAdd from "src/sections/customer/customer-add";
+import UserAdd from "src/sections/user/user-add";
 
 const now = new Date();
 
@@ -208,7 +208,7 @@ const Page = () => {
 
   return (
     <>
-      <CustomAdd open={customDialogOpen} setClose={() => setCutomDialogOpen(false)} />
+      <UserAdd open={customDialogOpen} setClose={() => setCutomDialogOpen(false)} />
       <Head>
         <title>Users | Court Booking</title>
       </Head>
@@ -263,8 +263,8 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            <CustomersSearch />
-            <CustomersTable
+            <UsersSearch />
+            <UsersTable
               count={users.length}
               items={customers}
               onDeselectAll={customersSelection.handleDeselectAll}

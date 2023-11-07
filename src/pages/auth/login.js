@@ -17,7 +17,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useAuth } from "src/hooks/use-auth";
-import { useAdmin } from "src/hooks/use-admin";
 import { Layout as AuthLayout } from "src/layouts/auth/layout";
 
 const Page = () => {

@@ -18,7 +18,6 @@ const initialState = {
 
 const handlers = {
   [HANDLERS.INITIALIZE]: (state, action) => {
-  
     const user = action.payload;
 
     return {
@@ -91,12 +90,8 @@ export const AuthProvider = (props) => {
     }
 
     if (isAuthenticated) {
-      const user = {
-        id: "5e86809283e28b96d2d38537",
-        avatar: "/assets/avatars/avatar-anika-visser.png",
-        name: "Nikolay Sapov",
-        email: "anika.visser@devias.io",
-      };
+
+      const user = JSON.parse(window.sessionStorage.getItem("user"));
 
       dispatch({
         type: HANDLERS.INITIALIZE,
@@ -138,9 +133,7 @@ export const AuthProvider = (props) => {
   };
 
   const signIn = async (email, password) => {
-    // if (email !== 'demo@devias.io' || password !== 'Password123!') {
-    //   throw new Error('Please check your email and password');
-    // }
+
     const userData = {
       email: email,
       password: password,
@@ -153,8 +146,9 @@ export const AuthProvider = (props) => {
         try {
           window.sessionStorage.setItem("authenticated", "true");
           window.sessionStorage.setItem("token", token);
-
+          
           const { user } = res.data;
+          window.sessionStorage.setItem("user", JSON.stringify(user));
 
           dispatch({
             type: HANDLERS.SIGN_IN,
@@ -175,6 +169,10 @@ export const AuthProvider = (props) => {
   };
 
   const signOut = () => {
+    window.sessionStorage.removeItem("authenticated");
+    window.sessionStorage.removeItem("token");
+    window.sessionStorage.removeItem("user");
+
     dispatch({
       type: HANDLERS.SIGN_OUT,
     });

@@ -5,7 +5,7 @@ import { Autocomplete } from "@mui/material";
 
 import { useAdmin } from "src/hooks/use-admin";
 
-export default function CustomAdd({ open, setClose }) {
+export default function UserAdd({ open, setClose }) {
   const admin = useAdmin();
 
   const flatOptionProps = {
@@ -20,7 +20,7 @@ export default function CustomAdd({ open, setClose }) {
     phone: "",
   });
 
-  const [role, setRole] = useState('user')
+  const [role, setRole] = useState("user");
 
   const onSave = async (event) => {
     event.preventDefault();

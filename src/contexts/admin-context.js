@@ -6,11 +6,14 @@ import axios from "axios";
 const HANDLERS = {
   INITIALIZE: "INITIALIZE",
   ADD_USER: "ADD_USER",
+  GET_COURTS: "GET_COURTS",
+  UPDATE_COURT: "UPDATE_COURT",
 };
 
 const initialState = {
   isAddingUser: false,
   users: [],
+  courts: [],
 };
 
 const handlers = {
@@ -28,6 +31,20 @@ const handlers = {
       users: users,
     };
   },
+  [HANDLERS.GET_COURTS]: (state, action) => {
+    const { courts } = action.payload;
+    return {
+      ...state,
+      courts: courts,
+    };
+  },
+  [HANDLERS.UPDATE_COURT]: (state, action) => {
+    const { courts } = action.payload;
+    return {
+      ...state,
+      courts: courts,
+    };
+  },
 };
 
 const reducer = (state, action) =>
@@ -43,7 +60,6 @@ export const AdminProvider = (props) => {
   const initialized = useRef(false);
 
   const initialize = async () => {
-    console.log("here");
     // Prevent from calling twice in development mode with React.StrictMode enabled
     if (initialized.current) {
       return;
@@ -67,6 +83,24 @@ export const AdminProvider = (props) => {
           throw new Error(err.message);
         } else {
           console.log(err);
+          throw new Error(err.response.data.message);
+        }
+      });
+
+    axios
+      .get(backendUrl + "/api/court/getCourts")
+      .then((res) => {
+        const { courts } = res.data;
+
+        dispatch({
+          type: HANDLERS.GET_COURTS,
+          payload: { courts },
+        });
+      })
+      .catch((err) => {
+        if (err.response === undefined) {
+          throw new Error(err.message);
+        } else {
           throw new Error(err.response.data.message);
         }
       });
@@ -101,11 +135,33 @@ export const AdminProvider = (props) => {
       });
   };
 
+  const updateCourt = async (data) => {
+    axios
+      .post(backendUrl + "/api/admin/updateCourt", data)
+      .then((res) => {
+        const { courts } = res.data;
+
+        dispatch({
+          type: HANDLERS.UPDATE_COURT,
+          payload: { courts },
+        });
+      })
+      .catch((err) => {
+        if (err.response === undefined) {
+          // network error
+          throw new Error(err.message);
+        } else {
+          throw new Error(err.response.data.message);
+        }
+      });
+  };
+
   return (
     <AdminContext.Provider
       value={{
         ...state,
         addUser,
+        updateCourt,
       }}
     >
       {children}
