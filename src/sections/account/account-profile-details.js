@@ -10,51 +10,59 @@ import {
   TextField,
   Unstable_Grid2 as Grid,
 } from "@mui/material";
+
 import { useAuthContext } from "src/contexts/auth-context";
 import { useAuth } from "src/hooks/use-auth";
+import LoadingOverlay from "src/components/loadingOverlay";
 
 const roles = [
   {
     value: "booker",
-    label: "Booker",
+    label: "booker",
   },
   {
     value: "admin",
-    label: "Admin",
+    label: "admin",
   },
 ];
 
 export const AccountProfileDetails = () => {
   const { user } = useAuthContext();
   const [values, setValues] = useState(user);
+  const [isSaving, setIsSaving] = useState(false);
   const auth = useAuth();
 
   const handleChange = useCallback((event) => {
-      setValues((prevState) => ({
-        ...prevState,
-        [event.target.name]: event.target.value,
-      }));
-    
+    setValues((prevState) => ({
+      ...prevState,
+      [event.target.name]: event.target.value,
+    }));
   }, []);
 
-  const handleSubmit = useCallback((event) => {
-    event.preventDefault();
-    const data = {
-      name: values.name,
-      email: values.email,
-      phone: values.phone,
-      role: values.role,
-    };
+  const handleSubmit = useCallback(
+    async (event) => {
+      event.preventDefault();
+      const data = {
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
+        role: values.role,
+      };
 
-    try {
-      auth.updateUser(data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [values]);
+      try {
+        setIsSaving(true);
+        await auth.updateUser(data);
+        setIsSaving(false);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [values]
+  );
 
   return (
     <form autoComplete="off" noValidate onSubmit={handleSubmit}>
+      {isSaving && <LoadingOverlay text={"Saving..."} color="success" />}
       <Card>
         <CardHeader subheader="The information can be edited" title="Profile" />
         <CardContent sx={{ pt: 0 }}>
@@ -79,6 +87,9 @@ export const AccountProfileDetails = () => {
                   onChange={handleChange}
                   required
                   value={user ? values.email : ""}
+                  InputProps={{
+                    readOnly: true,
+                  }}
                 />
               </Grid>
               <Grid xs={12} md={6}>
@@ -114,7 +125,7 @@ export const AccountProfileDetails = () => {
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          <Button type="submit" variant="contained">
+          <Button type="submit" variant="contained" sx={{ margin:2 }}>
             Save details
           </Button>
         </CardActions>

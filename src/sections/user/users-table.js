@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 import {
   Avatar,
   Box,
@@ -12,9 +13,18 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  SvgIcon,
 } from "@mui/material";
+
+import TrashIcon from "@heroicons/react/24/solid/TrashIcon";
+import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
+
 import { Scrollbar } from "src/components/scrollbar";
 import { getInitials } from "src/utils/get-initials";
+import ConfirmationDialog from "src/components/confirmDialog";
+import { useAdmin } from "src/hooks/use-admin";
+import LoadingOverlay from "src/components/loadingOverlay";
+import UserEdit from "./user-edit";
 
 export const UsersTable = (props) => {
   const {
@@ -31,11 +41,56 @@ export const UsersTable = (props) => {
     selected = [],
   } = props;
 
+  const [dialogOpen, setDialogOpen] = useState(false); // delete confirm dialog
+  const [emailToBeDeleted, setEmailToBeDeleted] = useState("false");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [currentUser, setCurrentUser] = useState({}); // The user to be edited
+  const [dialogOpen1, setDialogOpen1] = useState(false); // user edit dialog
+
   const selectedSome = selected.length > 0 && selected.length < items.length;
   const selectedAll = items.length > 0 && selected.length === items.length;
+  const admin = useAdmin();
+
+  const onDelete = (email) => {
+    setEmailToBeDeleted(email);
+    setDialogOpen(true);
+  };
+
+  const onEdit = async (user) => {
+    user.password = "";
+    user.confirm = "";
+    setDialogOpen1(true);
+    await setCurrentUser(user);
+  };
+
+  const handleConfirmDialog = async () => {
+    const data = {
+      email: emailToBeDeleted,
+    };
+
+    setIsDeleting(true); // show deleting progress
+    await admin.deleteUser(data);
+    setIsDeleting(false); // close deleting progress
+    setDialogOpen(false);
+  };
 
   return (
     <Card>
+      <ConfirmationDialog
+        open={dialogOpen}
+        onClose={() => {
+          setDialogOpen(false);
+        }}
+        onConfirm={handleConfirmDialog}
+      />
+      <UserEdit
+        open={dialogOpen1}
+        setClose={() => {
+          setDialogOpen1(false);
+        }}
+        user={currentUser}
+      />
+      {isDeleting && <LoadingOverlay text={"Deleting..."} color="warning" />}
       <Scrollbar>
         <Box sx={{ minWidth: 800 }}>
           <Table>
@@ -58,35 +113,61 @@ export const UsersTable = (props) => {
                 <TableCell>Email</TableCell>
                 <TableCell>Role</TableCell>
                 <TableCell>Phone</TableCell>
+                <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((customer) => {
-                const isSelected = selected.includes(customer.id);
+              {items.map((user) => {
+                const isSelected = selected.includes(user.id);
 
                 return (
-                  <TableRow hover key={customer._id} selected={isSelected}>
+                  <TableRow hover key={user._id} selected={isSelected}>
                     <TableCell padding="checkbox">
                       <Checkbox
                         checked={isSelected}
                         onChange={(event) => {
                           if (event.target.checked) {
-                            onSelectOne?.(customer.id);
+                            onSelectOne?.(user.id);
                           } else {
-                            onDeselectOne?.(customer.id);
+                            onDeselectOne?.(user.id);
                           }
                         }}
                       />
                     </TableCell>
                     <TableCell>
                       <Stack alignItems="center" direction="row" spacing={2}>
-                        <Avatar src={customer.avatar}>{getInitials(customer.name)}</Avatar>
-                        <Typography variant="subtitle2">{customer.name}</Typography>
+                        <Avatar src={user.avatar}>{getInitials(user.name)}</Avatar>
+                        <Typography variant="subtitle2">{user.name}</Typography>
                       </Stack>
                     </TableCell>
-                    <TableCell>{customer.email}</TableCell>
-                    <TableCell>{customer.role}</TableCell>
-                    <TableCell>{customer.phone && customer.phone}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.role}</TableCell>
+                    <TableCell>{user.phone && user.phone}</TableCell>
+                    <TableCell>
+                      {user.role !== "superadmin" && (
+                        <>
+                          <SvgIcon
+                            fontSize="small"
+                            color="action"
+                            onClick={() => {
+                              onDelete(user.email);
+                            }}
+                          >
+                            <TrashIcon />
+                          </SvgIcon>
+                          <SvgIcon
+                            fontSize="small"
+                            color="action"
+                            sx={{ marginLeft: 1 }}
+                            onClick={() => {
+                              onEdit(user);
+                            }}
+                          >
+                            <PencilIcon />
+                          </SvgIcon>
+                        </>
+                      )}
+                    </TableCell>
                   </TableRow>
                 );
               })}

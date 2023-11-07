@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import LockOpenIcon from "@heroicons/react/24/solid/LockOpenIcon";
 import LockClosedIcon from "@heroicons/react/24/solid/LockClosedIcon";
+import UserGroupIcon from "@heroicons/react/24/solid/UserGroupIcon";
 import { Avatar, Box, Card, CardContent, Divider, Stack, SvgIcon, Typography } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
 import Switch from "@mui/material/Switch";
@@ -8,18 +9,21 @@ import ConfirmationDialog from "src/components/confirmDialog";
 import { useState } from "react";
 
 import { useAdmin } from "src/hooks/use-admin";
+import LoadingOverlay from "src/components/loadingOverlay";
 
 export const CourtCard = (props) => {
   const { court, avatarText } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
   const [courtNameToBeChanged, setCourtNameToBeChanged] = useState("Stadium");
   const [courtBlockToBeChanged, setCourtBlockToBeChanged] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
   const admin = useAdmin();
 
   const handleSwitch = (name, blocked) => {
     setCourtNameToBeChanged(name);
     setDialogOpen(true);
-    setCourtBlockToBeChanged(!blocked)
+    setCourtBlockToBeChanged(!blocked);
   };
 
   const handleConfirmDialog = async () => {
@@ -28,8 +32,10 @@ export const CourtCard = (props) => {
       blocked: courtBlockToBeChanged,
     };
 
+    setIsSaving(true);
     await admin.updateCourt(data);
-    setDialogOpen(false)
+    setIsSaving(false);
+    setDialogOpen(false);
   };
 
   return (
@@ -47,19 +53,24 @@ export const CourtCard = (props) => {
         }}
         onConfirm={handleConfirmDialog}
       />
+      {isSaving && <LoadingOverlay text={"Saving..."} color="success" />}
+
       <CardContent>
         <Box
           sx={{
             display: "flex",
-            justifyContent: "center",
-            pb: 3,
+            alignItems: "center",
+            flexDirection: 'column',
           }}
         >
           <Avatar sx={{ bgcolor: deepPurple[500] }}>{avatarText}</Avatar>
+          <Typography align="center" gutterBottom variant="h5" paddingTop={3} paddingBottom={2}>
+            {court.name}
+          </Typography>
+          <SvgIcon color="action" fontSize="small">
+            <UserGroupIcon />
+          </SvgIcon>
         </Box>
-        <Typography align="center" gutterBottom variant="h5">
-          {court.name}
-        </Typography>
       </CardContent>
       <Box sx={{ flexGrow: 1 }} />
       <Divider />

@@ -24,7 +24,7 @@ const Page = () => (
             Settings
           </Typography>
           <SettingsPassword />
-          <SettingsNotifications />
+          {/* <SettingsNotifications /> */}
         </Stack>
       </Container>
     </Box>

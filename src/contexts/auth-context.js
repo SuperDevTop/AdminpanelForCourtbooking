@@ -203,7 +203,7 @@ export const AuthProvider = (props) => {
   };
 
   const updateUser = (data) => {
-    axios
+    return axios
       .post(backendUrl + "/api/auth/updateUser", data)
       .then((res) => {
         const { user } = res.data;

@@ -1,6 +1,4 @@
 import Head from "next/head";
-import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
-import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import {
   Box,
@@ -16,14 +14,36 @@ import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { CourtCard } from "src/sections/courts/court-card";
 import { CompaniesSearch } from "src/sections/courts/courts-search";
 import { useAdminContext } from "src/contexts/admin-context";
+import CourtAdd from "src/sections/courts/court-add";
+import { useEffect, useState } from "react";
 
 const Page = () => {
   const { courts } = useAdminContext();
+  const [displayedCourts, setDisplayedCourts] = useState([]);
+  const [openAddDialog, setOpenAddDialog] = useState(false);
+  const [page, setPage] = useState(1);
+  const [paginationCount, setPaginationCount] = useState(3);
+
+  const handlePagination = (event, value) => {
+    setPage(value);
+  };
+
+  useEffect(() => {
+    setPaginationCount(Math.ceil(courts.length/9))
+    setDisplayedCourts(courts.slice((page - 1) * 9, (page - 1) * 9 + 9))
+  }, [page, courts])
+
   return (
     <>
       <Head>
         <title>Courts | Court Booking</title>
       </Head>
+      <CourtAdd
+        open={openAddDialog}
+        setClose={() => {
+          setOpenAddDialog(false);
+        }}
+      />
       <Box
         component="main"
         sx={{
@@ -46,6 +66,9 @@ const Page = () => {
                     </SvgIcon>
                   }
                   variant="contained"
+                  onClick={() => {
+                    setOpenAddDialog(true);
+                  }}
                 >
                   Add
                 </Button>
@@ -53,9 +76,9 @@ const Page = () => {
             </Stack>
             <CompaniesSearch />
             <Grid container spacing={3}>
-              {courts.map((court, index) => (
+              {displayedCourts.map((court, index) => (
                 <Grid xs={12} md={6} lg={4} key={court._id}>
-                  <CourtCard court={court} avatarText={index + 1} />
+                  <CourtCard court={court} avatarText={index + 1 + (page - 1) * 9} />
                 </Grid>
               ))}
             </Grid>
@@ -65,7 +88,12 @@ const Page = () => {
                 justifyContent: "center",
               }}
             >
-              <Pagination count={3} size="small" />
+              <Pagination
+                count={paginationCount}
+                size="small"
+                page={page}
+                onChange={handlePagination}
+              />
             </Box>
           </Stack>
         </Container>
