@@ -7,16 +7,20 @@ const HANDLERS = {
   INITIALIZE: "INITIALIZE",
   ADD_USER: "ADD_USER",
   GET_COURTS: "GET_COURTS",
+  GET_PLAYERS: "GET_PLAYERS",
   UPDATE_COURT: "UPDATE_COURT",
   ADD_COURT: "ADD_COURT",
   DELETE_USER: "DELETE_USER",
   UPDATE_USER: "UPDATE_USER",
+  DELETE_PLAYER: "DELETE_PLAYER",
+  DELETE_COURT: "DELETE_COURT",
 };
 
 const initialState = {
   isAddingUser: false,
   users: [],
   courts: [],
+  players: [],
 };
 
 const handlers = {
@@ -27,6 +31,7 @@ const handlers = {
       users: users,
     };
   },
+
   [HANDLERS.ADD_USER]: (state, action) => {
     const { users } = action.payload;
     return {
@@ -34,6 +39,7 @@ const handlers = {
       users: users,
     };
   },
+
   [HANDLERS.DELETE_USER]: (state, action) => {
     const { users } = action.payload;
     return {
@@ -41,6 +47,7 @@ const handlers = {
       users: users,
     };
   },
+
   [HANDLERS.UPDATE_USER]: (state, action) => {
     const { user } = action.payload;
 
@@ -56,10 +63,51 @@ const handlers = {
       };
     } else {
       return {
-        ...state
-      }
+        ...state,
+      };
     }
   },
+
+  [HANDLERS.DELETE_PLAYER]: (state, action) => {
+    const { name } = action.payload;
+
+    const updatedPlayerIndex = state.players.findIndex((one) => one.name === name);
+
+    if (updatedPlayerIndex !== -1) {
+      const updatedPlayers = [...state.players];
+      updatedPlayers.splice(updatedPlayerIndex, 1);
+
+      return {
+        ...state,
+        players: updatedPlayers,
+      };
+    } else {
+      return {
+        ...state,
+      };
+    }
+  },
+
+  [HANDLERS.DELETE_COURT]: (state, action) => {
+    const { name } = action.payload;
+
+    const updatedCourtIndex = state.courts.findIndex((one) => one.name === name);
+
+    if (updatedCourtIndex !== -1) {
+      const updatedCourts = [...state.courts];
+      updatedCourts.splice(updatedCourtIndex, 1);
+
+      return {
+        ...state,
+        courts: updatedCourts,
+      };
+    } else {
+      return {
+        ...state,
+      };
+    }
+  },
+
   [HANDLERS.GET_COURTS]: (state, action) => {
     const { courts } = action.payload;
     return {
@@ -67,6 +115,15 @@ const handlers = {
       courts: courts,
     };
   },
+
+  [HANDLERS.GET_PLAYERS]: (state, action) => {
+    const { players } = action.payload;
+    return {
+      ...state,
+      players: players,
+    };
+  },
+
   [HANDLERS.UPDATE_COURT]: (state, action) => {
     const { courts } = action.payload;
     return {
@@ -74,6 +131,7 @@ const handlers = {
       courts: courts,
     };
   },
+
   [HANDLERS.ADD_COURT]: (state, action) => {
     const { courts } = action.payload;
     return {
@@ -131,6 +189,24 @@ export const AdminProvider = (props) => {
         dispatch({
           type: HANDLERS.GET_COURTS,
           payload: { courts },
+        });
+      })
+      .catch((err) => {
+        if (err.response === undefined) {
+          throw new Error(err.message);
+        } else {
+          throw new Error(err.response.data.message);
+        }
+      });
+
+    axios
+      .get(backendUrl + "/api/player/getPlayersData")
+      .then((res) => {
+        const { players } = res.data;
+
+        dispatch({
+          type: HANDLERS.GET_PLAYERS,
+          payload: { players },
         });
       })
       .catch((err) => {
@@ -253,6 +329,48 @@ export const AdminProvider = (props) => {
       });
   };
 
+  const deletePlayer = async (data) => {
+    return axios
+      .post(backendUrl + "/api/admin/deletePlayer", data)
+      .then((res) => {
+        const { name } = res.data;
+
+        dispatch({
+          type: HANDLERS.DELETE_PLAYER,
+          payload: { name },
+        });
+      })
+      .catch((err) => {
+        if (err.response === undefined) {
+          // network error
+          throw new Error(err.message);
+        } else {
+          throw new Error(err.response.data.message);
+        }
+      });
+  };
+
+  const deleteCourt = async (data) => {
+    return axios
+      .post(backendUrl + "/api/admin/deleteCourt", data)
+      .then((res) => {
+        const { name } = res.data;
+
+        dispatch({
+          type: HANDLERS.DELETE_COURT,
+          payload: { name },
+        });
+      })
+      .catch((err) => {
+        if (err.response === undefined) {
+          // network error
+          throw new Error(err.message);
+        } else {
+          throw new Error(err.response.data.message);
+        }
+      });
+  };
+
   return (
     <AdminContext.Provider
       value={{
@@ -262,6 +380,8 @@ export const AdminProvider = (props) => {
         addCourt,
         deleteUser,
         updateUser,
+        deletePlayer,
+        deleteCourt,
       }}
     >
       {children}

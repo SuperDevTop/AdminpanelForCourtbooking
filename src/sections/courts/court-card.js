@@ -10,6 +10,7 @@ import { useState } from "react";
 
 import { useAdmin } from "src/hooks/use-admin";
 import LoadingOverlay from "src/components/loadingOverlay";
+import TrashIcon from "@heroicons/react/24/solid/TrashIcon";
 
 export const CourtCard = (props) => {
   const { court, avatarText } = props;
@@ -17,6 +18,9 @@ export const CourtCard = (props) => {
   const [courtNameToBeChanged, setCourtNameToBeChanged] = useState("Stadium");
   const [courtBlockToBeChanged, setCourtBlockToBeChanged] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [nameToBeDeleted, setNameToBeDeleted] = useState('')
+  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false)
 
   const admin = useAdmin();
 
@@ -38,6 +42,21 @@ export const CourtCard = (props) => {
     setDialogOpen(false);
   };
 
+  const handleDelete = (name) => {
+    setNameToBeDeleted(name)
+    setOpenDeleteConfirm(true)
+  }
+
+  const handleDeleteConfirmDialog = async() => {
+    const data = {
+      name: nameToBeDeleted
+    }
+
+    setIsDeleting(true)
+    await admin.deleteCourt(data)
+    setIsDeleting(false)
+  }
+
   return (
     <Card
       sx={{
@@ -47,20 +66,30 @@ export const CourtCard = (props) => {
       }}
     >
       <ConfirmationDialog
+        text='Are you sure you want to change the status?'
         open={dialogOpen}
         onClose={() => {
           setDialogOpen(false);
         }}
         onConfirm={handleConfirmDialog}
       />
-      {isSaving && <LoadingOverlay text={"Saving..."} color="success" />}
+      <ConfirmationDialog
+        text='Are you sure you want to delete the court?'
+        open={openDeleteConfirm}
+        onClose={() => {
+          setOpenDeleteConfirm(false);
+        }}
+        onConfirm={handleDeleteConfirmDialog}
+      />
+      {isSaving && <LoadingOverlay text="Saving..." color="success" />}
+      {isDeleting && <LoadingOverlay text="Deleting..." color="warning" />}
 
       <CardContent>
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
-            flexDirection: 'column',
+            flexDirection: "column",
           }}
         >
           <Avatar sx={{ bgcolor: deepPurple[500] }}>{avatarText}</Avatar>
@@ -110,6 +139,9 @@ export const CourtCard = (props) => {
             }}
             inputProps={{ "aria-label": "controlled" }}
           />
+          <SvgIcon color="action" fontSize="small" onClick = {() => {handleDelete(court.name)}}>
+            <TrashIcon />
+          </SvgIcon>
         </Stack>
       </Stack>
     </Card>

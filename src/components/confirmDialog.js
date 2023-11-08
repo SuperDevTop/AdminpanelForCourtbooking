@@ -2,7 +2,7 @@ import React from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, SvgIcon } from "@mui/material";
 import InformationCircleIcon from "@heroicons/react/24/solid/LockClosedIcon";
 
-function ConfirmationDialog({ open, onClose, onConfirm }) {
+function ConfirmationDialog({text, open, onClose, onConfirm }) {
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Confirm Dialog</DialogTitle>
@@ -10,7 +10,8 @@ function ConfirmationDialog({ open, onClose, onConfirm }) {
         <SvgIcon color="action" fontSize="small" sx={{ marginRight: 2 }}>
           <InformationCircleIcon />
         </SvgIcon>
-        Are you sure you want to change the status?
+        {/* Are you sure you want to change the status? */}
+        {text}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary" variant="contained" sx={{ textTransform: "none" }}>

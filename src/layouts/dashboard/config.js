@@ -46,6 +46,15 @@ export const items = [
     )
   },
   {
+    title: 'Players',
+    path: '/players',
+    icon: (
+      <SvgIcon fontSize="small">
+        <UserPlusIcon />
+      </SvgIcon>
+    )
+  },
+  {
     title: 'Settings',
     path: '/settings',
     icon: (
@@ -54,15 +63,6 @@ export const items = [
       </SvgIcon>
     )
   },
-  // {
-  //   title: 'Login',
-  //   path: '/auth/login',
-  //   icon: (
-  //     <SvgIcon fontSize="small">
-  //       <LockClosedIcon />
-  //     </SvgIcon>
-  //   )
-  // },
   // {
   //   title: 'Register',
   //   path: '/auth/register',

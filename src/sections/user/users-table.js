@@ -118,7 +118,7 @@ export const UsersTable = (props) => {
             </TableHead>
             <TableBody>
               {items.map((user) => {
-                const isSelected = selected.includes(user.id);
+                const isSelected = selected.includes(user._id);
 
                 return (
                   <TableRow hover key={user._id} selected={isSelected}>
@@ -127,9 +127,9 @@ export const UsersTable = (props) => {
                         checked={isSelected}
                         onChange={(event) => {
                           if (event.target.checked) {
-                            onSelectOne?.(user.id);
+                            onSelectOne?.(user._id);
                           } else {
-                            onDeselectOne?.(user.id);
+                            onDeselectOne?.(user._id);
                           }
                         }}
                       />

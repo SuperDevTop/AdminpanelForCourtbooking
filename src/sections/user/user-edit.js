@@ -16,11 +16,12 @@ export default function UserEdit({ open, setClose, user }) {
 
   useEffect(() => {
     setValues(user);
-    user.role && setRole(user.role)
+    user.role && setRole(user.role);
   }, [user]);
 
   const [role, setRole] = useState("user");
   const [isSaving, setIsSaving] = useState(false);
+  const [password, setPassword] = useState("");
 
   const onSave = async (event) => {
     event.preventDefault();
@@ -30,11 +31,12 @@ export default function UserEdit({ open, setClose, user }) {
       email: values.email,
       phone: values.phone,
       role: role,
+      password: password,
     };
 
-    setIsSaving(true)
+    setIsSaving(true);
     await admin.updateUser(data);
-    setIsSaving(false)
+    setIsSaving(false);
 
     setClose();
   };
@@ -77,9 +79,9 @@ export default function UserEdit({ open, setClose, user }) {
                 onChange={handleChange}
                 required
                 value={values.email}
-                InputProps={{ 
-                  readOnly: true
-                 }}
+                InputProps={{
+                  readOnly: true,
+                }}
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -109,6 +111,18 @@ export default function UserEdit({ open, setClose, user }) {
                 />
               </Stack>
             </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                helperText="Please specify the password"
+                label="Password"
+                name="password"
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                }}
+                value={password}
+              />
+            </Grid>
             <Grid container display="flex" justifyContent="flex-end" spacing={1}>
               <Grid item>
                 <Button type="submit" variant="contained">
@@ -125,7 +139,7 @@ export default function UserEdit({ open, setClose, user }) {
         </form>
       </DialogContent>
 
-      {isSaving && <LoadingOverlay text='Saving...' color='success'/>}
+      {isSaving && <LoadingOverlay text="Saving..." color="success" />}
     </Dialog>
   );
 }
