@@ -7,11 +7,35 @@ import {
   CardContent,
   Divider,
   Typography,
+  Input,
+  InputLabel,
 } from "@mui/material";
+import { useRef } from "react";
+
 import { useAuthContext } from "src/contexts/auth-context";
+import { useAuth } from "src/hooks/use-auth";
+import { backendUrl } from "src/config/url";
 
 export const AccountProfile = () => {
   const { user } = useAuthContext();
+  const auth = useAuth();
+  const fileInputRef = useRef(null);
+
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+
+    const formData = new FormData();
+    formData.append("avatar", file);
+    formData.append("email", user.email);
+
+    await auth.uploadAvatar(formData);
+  };
+
+  const handleClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
 
   return (
     <Card>
@@ -34,12 +58,21 @@ export const AccountProfile = () => {
           <Typography gutterBottom variant="h5">
             {user ? user.email : ""}
           </Typography>
+          <InputLabel htmlFor="file-input">
+            <Input
+              id="file-input"
+              type="file"
+              sx={{ display: "none" }}
+              onChange={(e) => handleFileUpload(e)}
+              ref={fileInputRef}
+            />
+          </InputLabel>
         </Box>
       </CardContent>
       <Divider />
       <CardActions>
-        <Button fullWidth variant="text">
-          Upload picture
+        <Button fullWidth variant="text" onClick={handleClick}>
+          Change the avatar
         </Button>
       </CardActions>
     </Card>

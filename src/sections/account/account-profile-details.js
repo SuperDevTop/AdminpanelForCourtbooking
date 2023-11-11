@@ -102,7 +102,7 @@ export const AccountProfileDetails = () => {
                   value={user ? values.phone : ""}
                 />
               </Grid>
-              <Grid xs={12} md={6}>
+              {/* <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
                   label="Select Role"
@@ -119,7 +119,7 @@ export const AccountProfileDetails = () => {
                     </option>
                   ))}
                 </TextField>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Box>
         </CardContent>

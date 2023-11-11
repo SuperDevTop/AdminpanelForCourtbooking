@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useReducer, useRef } from "react"
 import PropTypes from "prop-types";
 import { backendUrl } from "src/config/url";
 import axios from "axios";
+import Error from "next/error";
 
 const HANDLERS = {
   INITIALIZE: "INITIALIZE",
@@ -90,7 +91,6 @@ export const AuthProvider = (props) => {
     }
 
     if (isAuthenticated) {
-
       const user = JSON.parse(window.sessionStorage.getItem("user"));
 
       dispatch({
@@ -133,7 +133,6 @@ export const AuthProvider = (props) => {
   };
 
   const signIn = async (email, password) => {
-
     const userData = {
       email: email,
       password: password,
@@ -146,7 +145,7 @@ export const AuthProvider = (props) => {
         try {
           window.sessionStorage.setItem("authenticated", "true");
           window.sessionStorage.setItem("token", token);
-          
+
           const { user } = res.data;
           window.sessionStorage.setItem("user", JSON.stringify(user));
 
@@ -221,6 +220,27 @@ export const AuthProvider = (props) => {
       });
   };
 
+  const uploadAvatar = (data) => {
+    console.log(data);
+    return axios
+      .post(backendUrl + "/api/auth/uploadAvatar", data)
+      .then((res) => {
+        const { user } = res.data;
+
+        dispatch({
+          type: HANDLERS.UPDATE_USER,
+          payload: { user },
+        });
+      })
+      .catch((err) => {
+        if (err.response === undefined) {
+          throw new Error(err.message);
+        } else {
+          throw new Error(err.response.data.message);
+        }
+      });
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -230,6 +250,7 @@ export const AuthProvider = (props) => {
         signOut,
         updatePassword,
         updateUser,
+        uploadAvatar,
       }}
     >
       {children}
