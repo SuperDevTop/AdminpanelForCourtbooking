@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
 import Head from "next/head";
-import { secondsToHours, subDays, subHours } from "date-fns";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
 
@@ -24,7 +23,7 @@ const Page = () => {
 
   const useCustomerIds = (customers) => {
     return useMemo(() => {
-      return customers.map((customer) => customer.id);
+      return customers.map((customer) => customer._id);
     }, [customers]);
   };
 

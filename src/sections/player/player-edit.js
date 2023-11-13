@@ -9,16 +9,12 @@ import { useAdmin } from "src/hooks/use-admin";
 export default function PlayerEdit({ open, setClose, player }) {
   const admin = useAdmin();
 
-  const flatOptionProps = {
-    options: ["user", "admin", "booker"],
-  };
   const [values, setValues] = useState({});
 
   useEffect(() => {
     setValues(player);
   }, [player]);
 
-  const [role, setRole] = useState("user");
   const [isSaving, setIsSaving] = useState(false);
 
   const onSave = async (event) => {
@@ -29,6 +25,11 @@ export default function PlayerEdit({ open, setClose, player }) {
       natl: values.natl,
       rank: values.rank,
       status: values.status,
+      atp_wta: values.atp_wta,
+      tournament_seed: values.tournament_seed,
+      right_handed: values.right_handed,
+      singles_in: values.singles_in,
+      doubles_in: values.doubles_in
     };
 
     setIsSaving(true)
@@ -43,10 +44,6 @@ export default function PlayerEdit({ open, setClose, player }) {
       ...previState,
       [event.target.name]: event.target.value,
     }));
-  };
-
-  const handleRole = (event, value) => {
-    setRole(value);
   };
 
   return (
@@ -104,6 +101,64 @@ export default function PlayerEdit({ open, setClose, player }) {
                 value={values.status}
               />
             </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                helperText="Please specify the ATP/WTA"
+                label="ATP/WTA"
+                name="atp_wta"
+                onChange={handleChange}
+                required
+                value={values.atp_wta}
+ 
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                helperText="Please specify the tournament seed"
+                label="Tournament Seed"
+                name="tournament_seed"
+                onChange={handleChange}
+                required
+                value={values.tournament_seed}
+ 
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                helperText="Please specify the right handed"
+                label="Right Handed"
+                name="right_handed"
+                onChange={handleChange}
+                required
+                value={values.right_handed}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                helperText="Please specify the singles in"
+                label="Singles In"
+                name="singles_in"
+                onChange={handleChange}
+                required
+                value={values.singles_in}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                helperText="Please specify the doubles in"
+                label="Doubles In"
+                name="doubles_in"
+                onChange={handleChange}
+                required
+                value={values.doubles_in}
+              />
+            </Grid>
+            
             {/* <Grid item xs={12} md={6}>
               <Stack spacing={1}>
                 <Autocomplete
@@ -135,7 +190,7 @@ export default function PlayerEdit({ open, setClose, player }) {
         </form>
       </DialogContent>
 
-      {isSaving && <LoadingOverlay text='Saving...' color='success'/>}
+      {isSaving && <LoadingOverlay text='Updating...' color='success'/>}
     </Dialog>
   );
 }

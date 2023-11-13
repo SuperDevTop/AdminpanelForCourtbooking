@@ -14,6 +14,8 @@ const HANDLERS = {
   UPDATE_USER: "UPDATE_USER",
   DELETE_PLAYER: "DELETE_PLAYER",
   DELETE_COURT: "DELETE_COURT",
+  ADD_PLAYER: "ADD_PLAYER",
+  UPDATE_PLAYER: "UPDATE_PLAYER",
 };
 
 const initialState = {
@@ -40,6 +42,18 @@ const handlers = {
     };
   },
 
+  [HANDLERS.ADD_PLAYER]: (state, action) => {
+    const { player } = action.payload;
+
+    const updatedPlayers = [...state.players]
+    updatedPlayers.push(player)
+
+    return {
+      ...state,
+      players: updatedPlayers,
+    };
+  },
+
   [HANDLERS.DELETE_USER]: (state, action) => {
     const { users } = action.payload;
     return {
@@ -60,6 +74,26 @@ const handlers = {
       return {
         ...state,
         users: updatedUsers,
+      };
+    } else {
+      return {
+        ...state,
+      };
+    }
+  },
+
+  [HANDLERS.UPDATE_PLAYER]: (state, action) => {
+    const { player } = action.payload;
+
+    const updatedPlayerIndex = state.players.findIndex((one) => one.name === player.name);
+
+    if (updatedPlayerIndex !== -1) {
+      const updatedPlayers = [...state.players];
+      updatedPlayers[updatedPlayerIndex] = player;
+
+      return {
+        ...state,
+        players: updatedPlayers,
       };
     } else {
       return {
@@ -155,11 +189,11 @@ export const AdminProvider = (props) => {
 
   const initialize = async () => {
     // Prevent from calling twice in development mode with React.StrictMode enabled
-    if (initialized.current) {
-      return;
-    }
+    // if (initialized.current) {
+    //   return;
+    // }
 
-    initialized.current = true;
+    // initialized.current = true;
 
     axios
       .get(backendUrl + "/api/admin/getUsers")
@@ -371,6 +405,46 @@ export const AdminProvider = (props) => {
       });
   };
 
+  const addPlayer = async (data) => {
+    return axios
+      .post(backendUrl + "/api/admin/addPlayer", data)
+      .then((res) => {
+        const { player } = res.data;
+
+        dispatch({
+          type: HANDLERS.ADD_PLAYER,
+          payload: { player },
+        });
+      })
+      .catch((err) => {
+        if (err.response === undefined) {
+          // network error
+          throw new Error(err.message);
+        } else {
+          throw new Error(err.response.data.message);
+        }
+      });
+  };
+
+  const updatePlayer = (data) => {
+    return axios
+      .post(backendUrl + "/api/admin/updatePlayer", data)
+      .then((res) => {
+        const { player } = res.data;
+        dispatch({
+          type: HANDLERS.UPDATE_PLAYER,
+          payload: { player },
+        });
+      })
+      .catch((err) => {
+        if (err.response === undefined) {
+          throw new Error(error.message);
+        } else {
+          throw new Error(err.response.data.message);
+        }
+      });
+  };
+
   return (
     <AdminContext.Provider
       value={{
@@ -382,6 +456,8 @@ export const AdminProvider = (props) => {
         updateUser,
         deletePlayer,
         deleteCourt,
+        addPlayer,
+        updatePlayer,
       }}
     >
       {children}

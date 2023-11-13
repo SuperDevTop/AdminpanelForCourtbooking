@@ -16,9 +16,8 @@ export default function PlayerAdd({ open, setClose }) {
     atp_wta: "",
     rank: "",
     status: "",
+    tournament_seed: ""
   });
-
-  const [role, setRole] = useState("user");
 
   const onSave = async (event) => {
     event.preventDefault();
@@ -29,7 +28,10 @@ export default function PlayerAdd({ open, setClose }) {
       atp_wta: values.atp_wta,
       rank: values.rank,
       status: values.status,
+      tournament_seed: values.tournament_seed,
     };
+
+    console.log(values.rank);
 
     setIsSaving(true);
     await admin.addPlayer(data);
@@ -81,7 +83,7 @@ export default function PlayerAdd({ open, setClose }) {
                 name="atp_wta"
                 onChange={handleChange}
                 required
-                value={values.phone}
+                value={values.atp_wta}
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -93,7 +95,7 @@ export default function PlayerAdd({ open, setClose }) {
                 onChange={handleChange}
                 required
                 type="number"
-                value={values.password}
+                value={values.rank}
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -102,10 +104,21 @@ export default function PlayerAdd({ open, setClose }) {
                 helperText="Please confirm the status"
                 label="Status"
                 name="status"
+                onChange={handleChange}
+                required
+                value={values.status}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                helperText="Please confirm the status"
+                label="Tournament Seed"
+                name="tournament_seed"
                 type="number"
                 onChange={handleChange}
                 required
-                value={values.confirm}
+                value={values.tournament_seed}
               />
             </Grid>
           
