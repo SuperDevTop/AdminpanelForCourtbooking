@@ -14,7 +14,6 @@ import { useRef } from "react";
 
 import { useAuthContext } from "src/contexts/auth-context";
 import { useAuth } from "src/hooks/use-auth";
-import { backendUrl } from "src/config/url";
 
 export const AccountProfile = () => {
   const { user } = useAuthContext();
