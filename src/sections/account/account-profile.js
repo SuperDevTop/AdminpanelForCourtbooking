@@ -27,7 +27,7 @@ export const AccountProfile = () => {
     formData.append("avatar", file);
     formData.append("email", user.email);
 
-    await auth.uploadAvatar(formData);
+    // await auth.uploadAvatar(formData);
   };
 
   const handleClick = () => {
