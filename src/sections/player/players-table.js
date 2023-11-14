@@ -77,7 +77,7 @@ export const PlayersTable = (props) => {
   return (
     <Card>
       <ConfirmationDialog
-        text='Are you sure you want to delete the user?'
+        text="Are you sure you want to delete the user?"
         open={dialogOpen}
         onClose={() => {
           setDialogOpen(false);
@@ -97,19 +97,7 @@ export const PlayersTable = (props) => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox">
-                  {/* <Checkbox
-                    checked={selectedAll}
-                    indeterminate={selectedSome}
-                    onChange={(event) => {
-                      if (event.target.checked) {
-                        onSelectAll?.();
-                      } else {
-                        onDeselectAll?.();
-                      }
-                    }}
-                  /> */}
-                </TableCell>
+                <TableCell padding="checkbox">No</TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>Photo</TableCell>
                 <TableCell>Nation</TableCell>
@@ -130,20 +118,17 @@ export const PlayersTable = (props) => {
                 player.image = "/images/players/" + lastname[lastname.length - 1] + ".jpg";
 
                 return (
-                  <TableRow hover key={player._id} selected={isSelected}>
-                    <TableCell padding="checkbox">
-                      {/* <Checkbox
-                        checked={isSelected}
-                        onChange={(event) => {
-                          if (event.target.checked) {
-                            onSelectOne?.(player._id);
-                          } else {
-                            onDeselectOne?.(player._id);
-                          }
-                        }}
-                      /> */}
-                      {index + 1}
-                    </TableCell>
+                  <TableRow
+                    hover
+                    key={player._id}
+                    selected={isSelected}
+                    sx={{
+                      "& .MuiTableCell-root": {
+                        textAlign: "center",
+                      },
+                    }}
+                  >
+                    <TableCell padding="checkbox">{index + 1}</TableCell>
                     <TableCell>{player.name}</TableCell>
                     <TableCell>
                       <Stack alignItems="center" direction="row" spacing={2}>
@@ -155,9 +140,9 @@ export const PlayersTable = (props) => {
                     <TableCell>{player.rank}</TableCell>
                     <TableCell>{player.status}</TableCell>
                     <TableCell>{player.tournament_seed}</TableCell>
-                    <TableCell>{player.right_handed}</TableCell>
-                    <TableCell>{player.singles_in}</TableCell>
-                    <TableCell>{player.doubles_in}</TableCell>
+                    <TableCell>{player.right_handed ? 'Yes' : 'No'}</TableCell>
+                    <TableCell>{player.singles_in ? 'Yes' : 'No'}</TableCell>
+                    <TableCell>{player.doubles_in ? 'Yes' : 'No'}</TableCell>
                     <TableCell>
                       <>
                         <SvgIcon
