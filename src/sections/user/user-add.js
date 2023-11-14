@@ -11,7 +11,7 @@ export default function UserAdd({ open, setClose }) {
   const [isSaving, setIsSaving] = useState(false);
 
   const flatOptionProps = {
-    options: ["user", "admin", "booker"],
+    options: ["admin", "booker"],
   };
 
   const [values, setValues] = useState({
@@ -22,7 +22,7 @@ export default function UserAdd({ open, setClose }) {
     phone: "",
   });
 
-  const [role, setRole] = useState("user");
+  const [role, setRole] = useState("booker");
 
   const onSave = async (event) => {
     event.preventDefault();

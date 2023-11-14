@@ -10,7 +10,7 @@ export default function UserEdit({ open, setClose, user }) {
   const admin = useAdmin();
 
   const flatOptionProps = {
-    options: ["user", "admin", "booker"],
+    options: ["admin", "booker"],
   };
   const [values, setValues] = useState({});
 
@@ -19,7 +19,7 @@ export default function UserEdit({ open, setClose, user }) {
     user.role && setRole(user.role);
   }, [user]);
 
-  const [role, setRole] = useState("user");
+  const [role, setRole] = useState("booker");
   const [isSaving, setIsSaving] = useState(false);
   const [password, setPassword] = useState("");
 
