@@ -22,7 +22,7 @@ const Page = () => {
   const [customDialogOpen, setCutomDialogOpen] = useState(false);
 
   const useCustomers = (page, rowsPerPage) => {
-    const updatedUsers = users && users.filter((one) => one.email !== user.email);
+    const updatedUsers = users && user && users.filter((one) => one.email !== user.email);
 
     return useMemo(() => {
       return applyPagination(updatedUsers, page, rowsPerPage);
