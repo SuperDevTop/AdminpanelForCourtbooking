@@ -138,7 +138,7 @@ export const AuthProvider = (props) => {
       password: password,
     };
 
-    axios
+    await axios
       .post(backendUrl + "/api/auth/login", userData)
       .then((res) => {
         const { token } = res.data;
@@ -158,7 +158,6 @@ export const AuthProvider = (props) => {
         }
       })
       .catch((err) => {
-        console.log(err);
         if (err.response === undefined) {
           throw new Error(err.message);
         } else {
@@ -206,6 +205,8 @@ export const AuthProvider = (props) => {
       .post(backendUrl + "/api/auth/updateUser", data)
       .then((res) => {
         const { user } = res.data;
+        window.sessionStorage.setItem("user", JSON.stringify(user));
+
         dispatch({
           type: HANDLERS.UPDATE_USER,
           payload: { user },
@@ -213,7 +214,7 @@ export const AuthProvider = (props) => {
       })
       .catch((err) => {
         if (err.response === undefined) {
-          throw new Error(error.message);
+          throw new Error(err.message);
         } else {
           throw new Error(err.response.data.message);
         }
@@ -221,7 +222,6 @@ export const AuthProvider = (props) => {
   };
 
   const uploadAvatar = (data) => {
-    console.log(data);
     return axios
       .post(backendUrl + "/api/auth/uploadAvatar", data)
       .then((res) => {

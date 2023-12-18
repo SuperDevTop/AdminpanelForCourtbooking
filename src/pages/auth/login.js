@@ -38,9 +38,8 @@ const Page = () => {
         await auth.signIn(values.email, values.password);
         window.sessionStorage.getItem("token") && router.push("/users");
       } catch (err) {
-        console.log(err);
         helpers.setStatus({ success: false });
-        helpers.setErrors({ submit: err.message });
+        helpers.setErrors({ submit: err.props });
         helpers.setSubmitting(false);
       }
     },
