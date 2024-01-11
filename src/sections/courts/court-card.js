@@ -60,6 +60,10 @@ export const CourtCard = (props) => {
   };
 
   const handleConfirmDialog = async () => {
+    if (courtBlockToBeChanged === false) {
+      setFrom(null);
+      setTo(null);
+    }
     const data = {
       courtName: courtNameToBeChanged,
       blocked: courtBlockToBeChanged,
