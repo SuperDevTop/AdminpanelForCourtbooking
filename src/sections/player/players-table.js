@@ -96,7 +96,7 @@ export const PlayersTable = (props) => {
         <Box sx={{ minWidth: 800 }}>
           <Table>
             <TableHead>
-              <TableRow>
+              <TableRow sx={{ "& .MuiTableCell-root": { textAlign: "center" } }}>
                 <TableCell padding="checkbox">No</TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>Photo</TableCell>
@@ -104,10 +104,10 @@ export const PlayersTable = (props) => {
                 <TableCell>ATP/WTA</TableCell>
                 <TableCell>Rank</TableCell>
                 <TableCell>Status</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>Tournament Seed</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>Right Handed</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>Singles In</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>Doubles In</TableCell>
+                <TableCell>Tournament Seed</TableCell>
+                <TableCell>Right Handed</TableCell>
+                <TableCell>Singles In</TableCell>
+                <TableCell>Doubles In</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
@@ -140,9 +140,9 @@ export const PlayersTable = (props) => {
                     <TableCell>{player.rank}</TableCell>
                     <TableCell>{player.status}</TableCell>
                     <TableCell>{player.tournament_seed}</TableCell>
-                    <TableCell>{player.right_handed ? 'Yes' : 'No'}</TableCell>
-                    <TableCell>{player.singles_in ? 'Yes' : 'No'}</TableCell>
-                    <TableCell>{player.doubles_in ? 'Yes' : 'No'}</TableCell>
+                    <TableCell>{player.right_handed ? "Yes" : "No"}</TableCell>
+                    <TableCell>{player.singles_in ? "Yes" : "No"}</TableCell>
+                    <TableCell>{player.doubles_in ? "Yes" : "No"}</TableCell>
                     <TableCell>
                       <>
                         <SvgIcon

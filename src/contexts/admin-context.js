@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useReducer, useRef } from "react"
 import PropTypes from "prop-types";
 import { backendUrl } from "src/config/url";
 import axios from "axios";
+import { pl } from "date-fns/locale";
 
 const HANDLERS = {
   INITIALIZE: "INITIALIZE",
@@ -16,6 +17,7 @@ const HANDLERS = {
   DELETE_COURT: "DELETE_COURT",
   ADD_PLAYER: "ADD_PLAYER",
   UPDATE_PLAYER: "UPDATE_PLAYER",
+  UPDATE_PLAYERSCHEDULE: "UPDATE_PLAYERSCHEDULE",
 };
 
 const initialState = {
@@ -23,11 +25,13 @@ const initialState = {
   users: [],
   courts: [],
   players: [],
+  playerSchedule: [],
 };
 
 const handlers = {
   [HANDLERS.INITIALIZE]: (state, action) => {
     const { users } = action.payload;
+
     return {
       ...state,
       users: users,
@@ -36,6 +40,7 @@ const handlers = {
 
   [HANDLERS.ADD_USER]: (state, action) => {
     const { users } = action.payload;
+
     return {
       ...state,
       users: users,
@@ -45,8 +50,8 @@ const handlers = {
   [HANDLERS.ADD_PLAYER]: (state, action) => {
     const { player } = action.payload;
 
-    const updatedPlayers = [...state.players]
-    updatedPlayers.push(player)
+    const updatedPlayers = [...state.players];
+    updatedPlayers.push(player);
 
     return {
       ...state,
@@ -144,6 +149,7 @@ const handlers = {
 
   [HANDLERS.GET_COURTS]: (state, action) => {
     const { courts } = action.payload;
+
     return {
       ...state,
       courts: courts,
@@ -151,15 +157,18 @@ const handlers = {
   },
 
   [HANDLERS.GET_PLAYERS]: (state, action) => {
-    const { players } = action.payload;
+    const { players, playerSchedule} = action.payload;
+
     return {
       ...state,
       players: players,
+      playerSchedule: playerSchedule
     };
   },
 
   [HANDLERS.UPDATE_COURT]: (state, action) => {
     const { courts } = action.payload;
+
     return {
       ...state,
       courts: courts,
@@ -168,9 +177,19 @@ const handlers = {
 
   [HANDLERS.ADD_COURT]: (state, action) => {
     const { courts } = action.payload;
+
     return {
       ...state,
       courts: courts,
+    };
+  },
+
+  [HANDLERS.UPDATE_PLAYERSCHEDULE]: (state, action) => {
+    const { playerSchedule } = action.payload;
+
+    return {
+      ...state,
+      playerSchedule: [...state.playerSchedule, ...playerSchedule],
     };
   },
 };
@@ -236,11 +255,11 @@ export const AdminProvider = (props) => {
     axios
       .get(backendUrl + "/api/player/getPlayersData")
       .then((res) => {
-        const { players } = res.data;
+        const { players, playerSchedule } = res.data;
 
         dispatch({
           type: HANDLERS.GET_PLAYERS,
-          payload: { players },
+          payload: { players, playerSchedule },
         });
       })
       .catch((err) => {
@@ -445,6 +464,26 @@ export const AdminProvider = (props) => {
       });
   };
 
+  const uploadPlayerschedule = (data) => {
+    return axios
+      .post(backendUrl + "/api/admin/uploadPlayerschedule", data)
+      .then((res) => {
+        const { playerSchedule } = res.data;
+
+        dispatch({
+          type: HANDLERS.UPDATE_PLAYERSCHEDULE,
+          payload: { playerSchedule },
+        });
+      })
+      .catch((err) => {
+        if (err.response === undefined) {
+          throw new Error(err.message);
+        } else {
+          throw new Error(err.response.data.message);
+        }
+      });
+  };
+
   return (
     <AdminContext.Provider
       value={{
@@ -458,6 +497,7 @@ export const AdminProvider = (props) => {
         deleteCourt,
         addPlayer,
         updatePlayer,
+        uploadPlayerschedule,
       }}
     >
       {children}
