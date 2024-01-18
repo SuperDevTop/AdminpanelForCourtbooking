@@ -53,8 +53,10 @@ export const PlayerScheduleTable = (props) => {
                     }}
                   >
                     <TableCell padding="checkbox">{index + 1}</TableCell>
+                    <TableCell>
+                      {new Date(item.date).getMonth() + 1} / {new Date(item.date).getDate()}
+                    </TableCell>
                     <TableCell>{item.player}</TableCell>
-                    <TableCell>{new Date(item.date).toLocaleDateString()}</TableCell>
                     <TableCell>{item.court}</TableCell>
                     <TableCell>{item.time}</TableCell>
                     <TableCell>{item.round}</TableCell>

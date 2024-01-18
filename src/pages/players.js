@@ -20,6 +20,7 @@ import { PlayersSearch } from "src/sections/player/players-search";
 import { applyPagination } from "src/utils/apply-pagination";
 import { useAdminContext } from "src/contexts/admin-context";
 import { useAdmin } from "src/hooks/use-admin";
+import CustomAlert from "src/components/customAlert";
 
 import PlayerAdd from "src/sections/player/player-add";
 
@@ -57,12 +58,13 @@ const Page = () => {
   const currenPlayers = usePlayers(page, rowsPerPage);
   const playersIds = usePlayerIds(currenPlayers);
   const playersSelection = useSelection(playersIds);
-  
+
   const [page1, setPage1] = useState(0);
   const [rowsPerPage1, setRowsPerPage1] = useState(10);
   const playerSchedule1 = usePlayerSchedule(page1, rowsPerPage1);
   const playerScheduleIds = usePlayerScheduleIds(playerSchedule1);
   const playerScheduleSelection = useSelection(playerScheduleIds);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
 
   const fileInputRef = useRef(null);
 
@@ -89,6 +91,11 @@ const Page = () => {
     formData.append("playerschedule", file);
 
     await admin.uploadPlayerschedule(formData);
+
+    setUploadSuccess(true)
+    setTimeout(() => {
+      setUploadSuccess(false)
+    }, 4000);
   };
 
   return (
@@ -140,7 +147,7 @@ const Page = () => {
               rowsPerPage={rowsPerPage}
               selected={playersSelection.selected}
             />
-            
+
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
                 <Typography variant="h4">Players Schedule</Typography>
@@ -187,6 +194,12 @@ const Page = () => {
             />
           </Stack>
         </Container>
+
+        <CustomAlert
+          openState={uploadSuccess}
+          text="The file was uploaed successfully!"
+          severity="success"
+        />
       </Box>
     </>
   );
